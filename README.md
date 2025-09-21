@@ -2,7 +2,7 @@
 
 I am a Product Manager transitioning into AI Product Management.  During the Summer of 2025, I took a class on [AI Evals for Engineers and Product Managers](https://maven.com/wrap-up/e39f711e) to learn how to analyze, measure, and improve the outputs provided by LLMs.  I had heard great things about the class and was not disappointed.  
 
-In this repo, I highlight my learnings and the project that I worked on to practice what I learned in class, as well as independent learning that I have engaged in to enhance the material learned in class.  Given that I have over 5 years of experience in education technology (EdTech), this project focuses on education. 
+In this repo, I highlight my learnings and the project that I worked on to practice what I learned in class, as well as independent learning that I have engaged in to enhance the material learned in class.  Given that I have over 5 years of experience in education technology (EdTech), this project focuses on education, specifically an education chatbot.
 
 Project Description:  COMPLETE
 
