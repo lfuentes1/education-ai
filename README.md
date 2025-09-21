@@ -1,1 +1,16 @@
-# education-ai
+# Welcome to Letty's Github!
+
+I am a Product Manager transitioning into AI Product Management.  During the Summer of 2025, I took a class on [AI Evals for Engineers and Product Managers](https://maven.com/wrap-up/e39f711e) to learn how to analyze, measure, and improve the outputs provided by LLMs.  I had heard great things about the class and was not disappointed.  
+
+In this repo, I highlight my learnings and the project that I worked on to practice what I learned in class, as well as independent learning that I have engaged in to enhance the material learned in class.  Given that I have over 5 years of experience in education technology (EdTech), this project focuses on education. 
+
+Project Description:  COMPLETE
+
+## Analyze
+The goal of the analysis phase of my project was to identify the most common failure modes for the LLM outputs.  For example, if a teacher requests, "Create me a lesson plan for TEKS Math K.2A that follows the traditional Madeline Hunter model," does the LLM provide an output that is correct and useful to the teacher?  In other words, does the output contain the sections that would be included in the traditional Madeline Hunter lesson plan model?  Did the output correctly identify the TEKS Math K.2A academic standard and incorporate that into the lesson?
+
+To complete the analysis phase, I engaged in the following:
+- Given that I don't have access to production data and that my experience is in education, I brainstormed on the different elements that could be included in a teacher query.  The class calls these elements **dimensions**.  While the dimensions can be many and can grow with the varied query types, I focused on lesson plans to keep it manageable. e.g., academic standards, subject, grade level, time constraint, lesson plan model, and learning styles.  
+- Once I had the dimensions, I created realistic teacher queries that took into account the dimensions to ensure diversity.  In collaboration with Claude Code, I created a batch process to feed the teacher queries into ChatGPT via the API and logged all the LLM responses in my database.
+- Armed with the teacher queries and the LLM responses, I was ready to make copious notes on how I felt about the LLM response.  At this point, the notes I made were unstructured, which allowed for a more efficient focus on what went well and what did not.  It was not long before I realized that ChatGPT does not know about the academic standards.  For example, in the earlier example, TEKS K.2A, which is about teaching to "count forward and backward to at least 20 with and without objects," ChatGPT would provide a lesson following the traditional Madeline Hunter plan, alright. Still, the content had nothing to do with the learning objective of "counting forward and backward...."  Other failures I observed included those related to ChatGPT hallucinating on the scope of the query (asked to give a Math lesson without specifics, it proceeded with providing a Math lesson of its own choice without asking for clarification on the scope).    
+- After completing a fair amount of annotations on the LLM responses, I went on to categorize the annotations into failure modes, called **axial coding**.  Axial coding leads to a structure taxonomy for failure modes or **failure mode taxonomy.**
