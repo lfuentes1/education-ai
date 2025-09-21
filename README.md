@@ -25,3 +25,15 @@ To complete the analysis phase, I engaged in the following:
 |Formatting & Usability Issues    |The output is poorly structured or formatted in a way that makes it hard to use in a classroom.|
 |Vagueness Handling Failures      |The LLM proceeds despite vague or unclear input rather than asking for clarification.|
 |Special Considerations Misuse    |Special Considerations (e.g., safety, copyright) are irrelevant, misapplied, or missing when required.|
+
+- After the failure modes were clearly identified, I created a column for each one in the database and assigned a "1" if the failure mode was present in the LLM response for a given teacher query and a "0" if it was absent.
+- Finally, before moving on to the **Measure** phase, I finalized the failure mode list into a rubric to help my future self in recalling not just the definition of each failure mode, but also question(s) I can ask myself in future annotations to provide consistently in "grading" rounds.  Two examples follow.
+
+|   Failure Mode            |                        Check Question                         |
+|---------------------------|---------------------------------------------------------------|
+|Standard Alignment Errors  |Did the response use the wrong standard, an invalid standard, or hallucinate one that doesn't exist?|
+|Hallucinated Scope         |Did the response make up a subject, grade, or objective instead of prompting for clarification?|
+
+**Note:** The failure modes and rubrics are not necessarily final, as it is an iterative process of improvement, especially as the entire process is applied with production data.
+ 
+## Measure 
