@@ -49,9 +49,9 @@ To achieve this phase, I completed the following:
 - Manual annotations and grading (although necessary at first) do not scale due to the time and effort it takes to get a sufficient amount of LLM responses reviewed.  Part of the measure phase also involves implementing automated evaluators for LLM responses, known as **AI Evals.**  There are many kinds of AI Evals, each with its ideal use case.  Describing the different types is better suited for a blog post; instead, I will call out the high-level plan as it relates to some of the education chatbot's failure modes.
 	- **Failure Mode:  Standard Alignment Errors**
 		- *Reference-based, code-based* evaluator to look up the learning objective and provide the context to the LLM.  Upon the LLM response, compare the objective returned to the ground truth.  Finally, use a *reference-free, code-based* evaluator to verify that the lesson plan contents align with the learning objective.  Grade the entire trace as pass or fail.
-	- **Failure Mode:  Completeness.**
+	- **Failure Mode:  Completeness**
 		- *Reference-free, code-based* evaluator to check that the LLM output has all the required elements based on the teacher query.  Grade the entire trace as pass or fail.
- 	- **Failure Mode:  Special Considerations Misuse.**
+ 	- **Failure Mode:  Special Considerations Misuse**
 	 	- *Reference-free, LLM-as-Judge* evaluator to verify if the generated special considerations were irrelevant, misapplied, or missing when required.
 	
 - For me, it was clear that I needed to implement enhancements to reduce the error rate of my most prevalent failure modes, and that is where I started, as described in the next phase, **Improve**.
