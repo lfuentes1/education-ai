@@ -54,7 +54,7 @@ To achieve this phase, I completed the following:
  	- **Failure Mode:  Special Considerations Misuse.**
 	 	- *Reference-free, LLM-as-Judge* evaluator to verify if the generated special considerations were irrelevant, misapplied, or missing when required.
 	
-- For me, it was clear that I needed to implement enhancements to reduce the error rate of my most prevalent failure modes, and that is where I started, as described in the next phase, **Implement**.
+- For me, it was clear that I needed to implement enhancements to reduce the error rate of my most prevalent failure modes, and that is where I started, as described in the next phase, **Improve**.
 
-## Implement
+## Improve
 Coming Soon...
