@@ -1,8 +1,10 @@
 # Welcome to Letty's Github!
 
-I am a Product Manager transitioning into AI Product Management.  During the Summer of 2025, I took a class on [AI Evals for Engineers and Product Managers](https://maven.com/wrap-up/e39f711e) to learn how to analyze, measure, and improve the outputs provided by LLMs.  I had heard great things about the class and was not disappointed.  
+This project demonstrates a systematic framework for evaluating and improving AI agents in education, addressing the challenges of quality and effectiveness for EdTech AI apps, where teacher trust is of utmost importance. 
 
-In this repo, I highlight my learnings and the project that I worked on to practice what I learned in class, as well as independent learning that I have engaged in to enhance the material learned in class.  Given that I have over 5 years of experience in education technology (EdTech), this project focuses on education, specifically an education chatbot.
+During the Summer of 2025, I took a class on [AI Evals for Engineers and Product Managers](https://maven.com/wrap-up/e39f711e) to learn how to analyze, measure, and improve the outputs provided by LLMs.  Using my new knowledge and drawing on over 5 years of EdTech product management experience, I embarked on a project to create an education chatbot that assists teachers in creating lesson plans.
+
+In this repo, I explain the project starting with the analysis phase.
 
 **Project Description:  COMPLETE**
 
