@@ -46,7 +46,15 @@ To achieve this phase, I completed the following:
 	- By answering the question, "What is the error rate of each failure mode?", I immediately saw that *Standards Alignment* and *Hallucinated Scope* had the highest error rates.  This measurement aligned with my observations as I manually annotated the LLM responses during the analysis phase.  
 	- It was also helpful to see a table with all the queries listed and the specific failure modes in which the LLM response either passed (failure mode was absent) or failed (failure mode was present).  This helped me trace back to a specific query, the failure mode if something required a double look.
 
-- Certainly, there is room to capture additional metrics in future iterations to define success and quality, as well as capture usage metrics if this were being used in production.  For now, the metrics that I started with were sufficient to lead me into the next phase, **Implement**.
+- Manual annotations and grading (although necessary at first) do not scale due to the time and effort it takes to get a sufficient amount of LLM responses reviewed.  Part of the measure phase also involves implementing automated evaluators for LLM responses, known as **AI Evals.**  There are many kinds of AI Evals, each with its ideal use case.  Describing the different types is better suited for a blog post; instead, I will call out the high-level plan as it relates to some of the education chatbot's failure modes.
+	- **Failure Mode:  Standard Alignment Errors**
+		- *Reference-based, code-based* evaluator to retrieve the learning objective and provide the context to the LLM.  Upon the LLM response, compare the objective returned to the ground truth.  Finally, use a *reference-free, code-based* evaluator to verify that the lesson plan contents align with the learning objective.  Grade the entire trace as pass or fail.
+	- **Failure Mode:  Completeness.**
+		- *Reference-free, code-based* evaluator to check that the LLM output has all the required elements based on the teacher query.  Grade the entire trace as pass or fail.
+ 	- **Failure Mode:  Special Considerations Misuse.**
+	 	- *Reference-free, LLM-as-Judge* evaluator to verify if the generated special considerations were irrelevant, misapplied, or missing when required.
+	
+- For me, it was clear that I needed to implement enhancements to reduce the error rate of my most prevalent failure modes, and that is where I started, as described in the next phase, **Implement**.
 
 ## Implement
 Coming Soon
