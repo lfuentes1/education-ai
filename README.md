@@ -57,4 +57,31 @@ To achieve this phase, I completed the following:
 - For me, it was clear that I needed to implement enhancements to reduce the error rate of my most prevalent failure modes, and that is where I started, as described in the next phase, **Improve**.
 
 ## Improve
-Coming Soon...
+The improvement phase is about making the product more reliable, accurate, and useful, in this case, the education chatbot for the teacher.
+
+**Priority #1: *Standard Alignment Errors***
+This failure mode occurs because the LLM does not know about the academic not know about the academic standard codes and their corresponding learning objectives.  The academic standard codes and learning objectives are a ground truth.  This information is published for nationwide or state use.  Suppose I feed this context to the LLM on each teacher query that references academic standard codes and compare the LLM response learning objective and lesson plan to ground truth. Do standard alignment errors go away? 
+**High-level plan (in progress):**
+- Store the academic standard codes and corresponding learning objectives, and complete a SQL lookup for the learning objective when the teacher provides the code.  
+- Feed the retrieved learning objective context to the LLM including the teacher query.
+- Upon receiving the LLM response, perform a SQL lookup to ensure the learning objective was not dropped by the LLM.
+- Using a curated list of keywords, parse the lesson plan to ensure keywords associated with the learning objective are present.
+
+**Priority #2: *Hallucinated Scope***
+- This failure mode occurs because the system prompt does not include instructions on what the LLM should do in the case where the teacher's prompt is vague.  The teacher may not have provided a grade, subject, or learning objective, resulting in an underspecified query that the LLM could not successfully process.  Instead of asking for clarification, the LLM self-selected the missing information and responded based on its hallucinated information.  This failure mode could easily be reduced by improving the system prompt.  It is fast, cost-effective, and a low-hanging fruit.
+
+**Priority #3: *Suboptimal Quality***
+- This failure mode occurs when the response provided by the LLM is overcrowded, unrealistic in pacing, or instructionally weak.  Note:  I need an improvement plan.
+
+**Priority #4: *Vagueness Handling***
+- This failure mode occurs because the LLM proceeds with providing a response despite the teacher query being vague or unclear rather than asking for clarfiication.  Similar to the hallucinated scope failure mode, this failure mode could be reduced by improving the system prompt, which is fast and inexpensive.
+
+More improvements could be made to improve the education chatbot, especially as it relates to the additional failure modes.  As more AI features are discovered from user research, implemented, and used in production, the entire process of analyze-measure-improve is applied to ensure the new features meet quality standards. 
+
+My goal was to provide an overview of the AI education chatbot that I am working on to demonstrate my learnings and new skillset that I have acquired to prepare for an AI Product Manager role.  I hope this was explained with sufficient detail to get an understanding of the process.
+
+
+
+Hi! I'm your first Markdown file in **StackEdit**. If you want to learn about StackEdit, you can read me. If you want to play with Markdown, you can edit me. Once you have finished with me, you can create new files by opening the **file explorer** on the left corner of the navigation bar.
+
+
