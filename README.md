@@ -47,3 +47,6 @@ To achieve this phase, I completed the following:
 	- It was also helpful to see a table with all the queries listed and the specific failure modes in which the LLM response either passed (failure mode was absent) or failed (failure mode was present).  This helped me trace back to a specific query, the failure mode if something required a double look.
 
 - Certainly, there is room to capture additional metrics in future iterations to define success and quality, as well as capture usage metrics if this were being used in production.  For now, the metrics that I started with were sufficient to lead me into the next phase, **Implement**.
+
+## Implement
+Coming Soon
