@@ -1,4 +1,4 @@
-# Welcome to Letty's Github!
+# Welcome to Letty's Education-AI Github repo!
 
 This project demonstrates a systematic framework for evaluating and improving AI agents in education, addressing the challenges of quality and effectiveness for EdTech AI apps, where teacher trust is of utmost importance. 
 
