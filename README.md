@@ -37,3 +37,13 @@ To complete the analysis phase, I engaged in the following:
 **Note:** The failure modes and rubrics are not necessarily final, as it is an iterative process of improvement, especially as the entire process is applied with production data.
  
 ## Measure 
+The goal of the measure phase is to determine what should be measured and implement metrics for those measurements.  Essentially, it is turning the unstructured insights from the analysis phase into qualitative data.  The identified metrics will guide me in determining the necessary improvements to enhance the accuracy and reliability of the chatbot, ensuring that teachers find it trustworthy and valuable.
+
+To achieve this phase, I completed the following:
+- The first thing I needed was an additional tool that would allow me to visualize the different metrics I wanted to capture.  This would allow me to visualize my data in a more efficient and fun way!  From internal class channels, I heard Jupyter Lab Notebooks, "notebooks," as a circulating suggestion, so I decided to give it a try.  I integrated my database (which stores my queries and LLM responses, among other data) into notebooks.
+- The most obvious measurement I wanted to capture was the failure mode error rate.  That is, what percentage of the time does "x" failure mode occur among all the LLM responses?  Knowing this information would allow me to prioritize improvements in the next phase.
+-  The `failure_mode_analysis.ipynb` file shows several pieces of insight:
+	- By answering the question, "What is the error rate of each failure mode?", I immediately saw that *Standards Alignment* and *Hallucinated Scope* had the highest error rates.  This measurement aligned with my observations as I manually annotated the LLM responses during the analysis phase.  
+	- It was also helpful to see a table with all the queries listed and the specific failure modes in which the LLM response either passed (failure mode was absent) or failed (failure mode was present).  This helped me trace back to a specific query, the failure mode if something required a double look.
+
+- Certainly, there is room to capture additional metrics in future iterations to define success and quality, as well as capture usage metrics if this were being used in production.  For now, the metrics that I started with were sufficient to lead me into the next phase, **Implement**.
