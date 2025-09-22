@@ -4,7 +4,7 @@ I am a Product Manager transitioning into AI Product Management.  During the Sum
 
 In this repo, I highlight my learnings and the project that I worked on to practice what I learned in class, as well as independent learning that I have engaged in to enhance the material learned in class.  Given that I have over 5 years of experience in education technology (EdTech), this project focuses on education, specifically an education chatbot.
 
-Project Description:  COMPLETE
+**Project Description:  COMPLETE**
 
 ## Analyze
 One goal of the analysis phase of my project was to identify the most common failure modes for the LLM outputs.  For example, if a teacher requests, "Create me a lesson plan for TEKS Math K.2A that follows the traditional Madeline Hunter model," does the LLM provide an output that is correct and useful to the teacher?  In other words, does the output contain the sections that would be included in the traditional Madeline Hunter lesson plan model?  Did the output correctly identify the TEKS Math K.2A academic standard and incorporate that into the lesson?  A second goal was to make the analysis phase systematic to be able to repeat the process in future iterations.
@@ -42,7 +42,7 @@ The goal of the measure phase is to determine what should be measured and implem
 To achieve this phase, I completed the following:
 - The first thing I needed was an additional tool that would allow me to visualize the different metrics I wanted to capture.  This would allow me to visualize my data in a more efficient and fun way!  From internal class channels, I heard Jupyter Lab Notebooks, "notebooks," as a circulating suggestion, so I decided to give it a try.  I integrated my database (which stores my queries and LLM responses, among other data) into notebooks.
 - The most obvious measurement I wanted to capture was the failure mode error rate.  That is, what percentage of the time does "x" failure mode occur among all the LLM responses?  Knowing this information would allow me to prioritize improvements in the next phase.
--  The [`failure_mode_analysis.ipynb`](https://maven.com/wrap-up/e39f711e) file shows several pieces of insight:
+-  The [`failure_mode_analysis.ipynb`](https://maven.com/wrap-up/e39f711e) **(NEED CORRECT LINK!!!!)** file shows several pieces of insight:
 	- By answering the question, "What is the error rate of each failure mode?", I immediately saw that *Standards Alignment* and *Hallucinated Scope* had the highest error rates.  This measurement aligned with my observations as I manually annotated the LLM responses during the analysis phase.  
 	- It was also helpful to see a table with all the queries listed and the specific failure modes in which the LLM response either passed (failure mode was absent) or failed (failure mode was present).  This helped me trace back to a specific query, the failure mode if something required a double look.
 
