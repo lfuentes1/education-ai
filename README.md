@@ -80,9 +80,3 @@ High-level plan (in progress):
 More could be done to improve the quality of education chatbot, especially as it relates to the additional failure modes.  As more AI features are discovered from user research, implemented, and used in production, the entire process of analyze-measure-improve is applied to ensure the new features meet quality standards. 
 
 My goal was to provide an overview of the AI education chatbot that I am working on to demonstrate my learnings and new skillset that I have acquired to prepare for an AI Product Manager role.  I hope this was explained with sufficient detail to get an understanding of the process.
-
-
-
-Hi! I'm your first Markdown file in **StackEdit**. If you want to learn about StackEdit, you can read me. If you want to play with Markdown, you can edit me. Once you have finished with me, you can create new files by opening the **file explorer** on the left corner of the navigation bar.
-
-
