@@ -1,6 +1,6 @@
 # Welcome to Letty's Education-AI Github repo!
 
-This project demonstrates a systematic framework for evaluating and improving AI agents in education, addressing the challenges of quality and effectiveness for EdTech AI apps, where teacher trust is of utmost importance. 
+This project demonstrates a systematic framework for evaluating and improving AI chatbots in education, addressing the challenges of quality and effectiveness for EdTech AI apps, where teacher trust is of utmost importance. 
 
 During the Summer of 2025, I took a class on [AI Evals for Engineers and Product Managers](https://maven.com/wrap-up/e39f711e) to learn how to analyze, measure, and improve the outputs provided by LLMs.  Using my new knowledge and drawing on over 5 years of EdTech product management experience, I embarked on a project to create an education chatbot that assists teachers in creating lesson plans.
 
