@@ -6,8 +6,6 @@ During the Summer of 2025, I took a class on [AI Evals for Engineers and Product
 
 In this repo, I explain the project starting with the analysis phase.
 
-**Project Description:  COMPLETE**
-
 ## Analyze
 One goal of the analysis phase of my project was to identify the most common failure modes for the LLM outputs.  For example, if a teacher requests, "Create me a lesson plan for TEKS Math K.2A that follows the traditional Madeline Hunter model," does the LLM provide an output that is correct and useful to the teacher?  In other words, does the output contain the sections that would be included in the traditional Madeline Hunter lesson plan model?  Did the output correctly identify the TEKS Math K.2A academic standard and incorporate that into the lesson?  A second goal was to make the analysis phase systematic to be able to repeat the process in future iterations.
 
