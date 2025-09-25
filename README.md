@@ -42,7 +42,7 @@ The goal of the measure phase is to determine what should be measured and implem
 To achieve this phase, I completed the following:
 - The first thing I needed was an additional tool that would allow me to visualize the different metrics I wanted to capture.  This would allow me to visualize my data in a more efficient and fun way!  The overwhelming suggestion was to use Python libraries so I went down that route.  
 - The most obvious measurement I wanted to capture was the failure mode error rate.  That is, what percentage of the time does "x" failure mode occur among all the LLM responses?  Knowing this information would allow me to prioritize improvements in the next phase.
--  The [`pages/failure_mode_analysis_display.html`](https://github.com/lfuentes1/education-ai/pages/failure_mode_analysis_display.html) file shows several pieces of insight:
+-  The [`pages/failure_mode_analysis_display.html`](https://lfuentes1.github.io/education-ai/pages/failure_mode_analysis_display.html) file shows several pieces of insight:
 	- By answering the question, "What is the error rate of each failure mode?", I immediately saw that *Standards Alignment* and *Hallucinated Scope* had the highest error rates.  This measurement aligned with my observations as I manually annotated the LLM responses during the analysis phase.  
 	- It was also helpful to see a table with all the queries listed and the specific failure modes in which the LLM response either passed (failure mode was absent) or failed (failure mode was present).  This helped me trace back to a specific query, the failure mode if something required a double look.
 
