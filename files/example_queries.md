@@ -257,14 +257,17 @@ Grades K-2
 - Ensure all activities are inclusive and consider varying language proficiency levels among students.
 - Encourage peer support during activities to promote a collaborative learning environment.
 - Check for any district policies regarding visuals used, specifically if they include licensed materials or any sensitive topics.
-This lesson plan provides structure while allowing flexibility to meet the needs of ELL students by using visuals, simple vocabulary, and hands-on activities.                                                                                                                                                                                                                                                                                                                 --------------------------------------------------------------------------------------------------------------------------------------------------------
+This lesson plan provides structure while allowing flexibility to meet the needs of ELL students by using visuals, simple vocabulary, and hands-on activities.  
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------
 |   Key               |                        Value                           |
 |---------------------|--------------------------------------------------------|
-|query_id             |REPL020                                              |
-|user_input           |Design a lesson about 2.NBT.2 that accounts for all learning styles.          |
-|annotation_text      |2.NBT.2 is a common standards learning objective about "Count within 1000; skip-count by 5s, 10s, and 100s".  The LLM did not get that standard correctly.                                    |
-|pass_fail            |false                                                    |
-|failure_mode_codes  | ["STANDARDS_ALIGNMENT"] |
+|query_id             |REPL020|
+|user_input           |Design a lesson about 2.NBT.2 that accounts for all learning styles.|
+|annotation_text      |2.NBT.2 is a common standards learning objective about "Count within 1000; skip-count by 5s, 10s, and 100s".  The LLM did not get that standard correctly.|
+|pass_fail            |false|
+|failure_mode_codes   |["STANDARDS_ALIGNMENT"]|
+|
 
 ### llm_response:
 #### Lesson Plan: Understanding Place Value (2.NBT.2)
@@ -313,4 +316,4 @@ Students will understand and demonstrate the concept of place value by identifyi
 #### Special Considerations:
 - If using digital tools, ensure supervision for online safety and that necessary permissions and accounts are established. 
 - If certain students require specific accommodations, ensure tools and activities are inclusive and accessible for all learners.
-This lesson plan offers diverse methods to cater to different learning styles and ensures that all students can engage with the concept of place value effectively.                                                                                                                                                           
+This lesson plan offers diverse methods to cater to different learning styles and ensures that all students can engage with the concept of place value effectively.|
