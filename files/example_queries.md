@@ -1,16 +1,15 @@
 # Example Queries
 
-|   Key               |                        Value                      |
+|   Key               |                        Value                           |
 |---------------------|--------------------------------------------------------|
-|query_id             |REPL010|
+|query_id             |REPL010                                                 |
 |user_input           |Create a full lesson plan for 4.NF.2 with associated worksheet and exit slip.|
-|annotation_text      |The Exit Slip if it is a true Exit Slip needs to be accounted for in the lesson plan duration.
-The worksheet seems incomplete, e.g., choose two problems from the but only two are provided.|
-|pass_fail            |fail|
-|failure_mode_codes   |["SUBOPTIMAL_QUALITY"]|
+|annotation_text      |The Exit Slip if it is a true Exit Slip needs to be accounted for in the lesson plan duration. The worksheet seems incomplete, e.g., choose two problems from the but only two are provided.                        |
+|pass_fail            |fail                                                    |
+|failure_mode_codes   |["SUBOPTIMAL_QUALITY"]                                  |
 
 ### llm_response:
-#### Lesson Plan: Understanding and Comparing Fractions (4.NF.2)**
+#### Lesson Plan: Understanding and Comparing Fractions (4.NF.2)
 **Grade Level:** 4  
 **Subject:** Mathematics  
 **Duration:** 60 minutes  
@@ -84,11 +83,16 @@ The worksheet seems incomplete, e.g., choose two problems from the but only two 
                                                  
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------
+|   Key               |                        Value                           |
+|---------------------|--------------------------------------------------------|
+|query_id             |REPL027                                                 |
+|user_input           |Create an emergency lesson about Thanksgiving.          |
+|annotation_text      |Technically correct.                                    |
+|pass_fail            |true                                                    |
+|failure_mode_codes   |[]                                                      |
 
-
-
-| REPL027  | Create an emergency lesson about Thanksgiving.                                | ### Emergency Thanksgiving Lesson Plan
-
+### llm_response:
+#### Emergency Thanksgiving Lesson Plan
 **Grade Level:** K-5  
 **Duration:** 45 minutes  
 
@@ -136,7 +140,18 @@ The worksheet seems incomplete, e.g., choose two problems from the but only two 
 - Check for any allergen concerns if snacks are involved or if students will be using any materials that could cause sensitivity.
 - Ensure discussions remain age-appropriate and respectful, and consider the varying cultural backgrounds of students. 
 
-This lesson can easily be adjusted for virtual learning scenarios if necessary.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | Technicnally correct.                                                                                                                                                                                                                                                                                               | true      | []                                                                            |
+This lesson can easily be adjusted for virtual learning scenarios if necessary.                                                                                                                                                                                                                                                                                                                  
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+|   Key               |                        Value                           |
+|---------------------|--------------------------------------------------------|
+|query_id             |REPL027                                                 |
+|user_input           |Create an emergency lesson about Thanksgiving.          |
+|annotation_text      |Technically correct.                                    |
+|pass_fail            |true                                                    |
+|failure_mode_codes   |[]                                                      |
+
+
+
 | REPL022  | I need a 30-minute lesson on identifying healthy and unhealthy snack choices  | ### Lesson Title: Identifying Healthy and Unhealthy Snack Choices
 
 #### Grade Level: 3-5 
