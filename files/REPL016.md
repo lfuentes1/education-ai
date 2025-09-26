@@ -1,5 +1,4 @@
 
---------------------------------------------------------------------------------------------------------------------------------------------------------
 |   Key               |                        Value                           |
 |---------------------|--------------------------------------------------------|
 |query_id             |REPL016                                               |
@@ -26,14 +25,18 @@ Sure! Below is a sample lesson plan tailored to TEKS 3F, which focuses on studen
 **1. Introduction (10 minutes)**
    - Begin with a class discussion. Ask students what they think healthy behaviors are. Write their responses on the chart paper or whiteboard.
    - Introduce TEKS 3F and explain its focus on practicing healthy behaviors.
+
 **2. Group Activity (20 minutes)**
    - Divide the class into small groups. Each group will discuss specific healthy behaviors (e.g., exercise, eating fruits and vegetables, hygiene practices).
    - Each group creates a poster highlighting one healthy behavior, including why it's important and how to implement it.
+
 **3. Presentation (10 minutes)**
    - Groups will present their posters to the class. Encourage classmates to ask questions and share additional ideas related to healthy behaviors.
+
 **4. Personal Action Plan (15 minutes)**
    - Provide students with action plan templates.
    - Instruct them to write down three healthy behaviors they currently practice and three they would like to incorporate into their lives. Encourage them to think about their daily routine and how to make healthy choices.
+
 **5. Closure (5 minutes)**
    - Have a brief reflection session. Ask students to share what they learned and how they plan to incorporate their new healthy behaviors.
 #### Assessment:
