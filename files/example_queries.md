@@ -1,9 +1,8 @@
-# | query_id | user_input | llm_response | annotation_text | pass_fail | failure_mode_codes
+### query_id:  REPL010
+### user_input:  Create a full lesson plan for 4.NF.2 with associated worksheet and exit slip. 
 
-## query_id:  REPL010
-## user_input:  Create a full lesson plan for 4.NF.2 with associated worksheet and exit slip. | ### Lesson Plan: Understanding and Comparing Fractions (4.NF.2) 
-
-## llm_response:
+### llm_response:
+#### Lesson Plan: Understanding and Comparing Fractions (4.NF.2)**
 **Grade Level:** 4  
 **Subject:** Mathematics  
 **Duration:** 60 minutes  
@@ -50,7 +49,7 @@
 - **Worksheet**: To assess understanding of comparing fractions.
 - **Exit Slip**: A short exit slip with one question: "Which fraction is greater: 2/3 or 3/5? Explain why."
 
-### Worksheet: Comparing Fractions
+#### Worksheet: Comparing Fractions
 
 1. Compare the fractions. Write <, >, or =:
    - a) 1/2 __ 3/4
@@ -63,24 +62,23 @@
 3. Choose two fractions from the following list and explain which one is larger and why:
    - 3/8, 1/2
 
-### Exit Slip
+#### Exit Slip
 
 **Name: ___________________________**
 
-1. Compare the fractions: 2/3 __ 3/5. Explain your reasoning:  
-   _________________________________________________________  
-   _________________________________________________________  
+1. Compare the fractions: 2/3 __ 3/5. Explain your reasoning:  _________________________________________________________  
 
-### Special Considerations:
+
+#### Special Considerations:
 - This lesson involves visual aids and hands-on activities which require supervision. Ensure that students are appropriately supported during group work and individual practice.
 - Check with district policy in case technology is used in future extensions (e.g., online fraction games).
 - Ensure accessibility for all students who may need special accommodations. 
 
-## annotation_test
+### annotation_text
 The Exit Slip if it is a true Exit Slip needs to be accounted for in the lesson plan duration.
 The worksheet seems incomplete, e.g., choose two problems from the but only two are provided. 
-## pass_fail:  fail
-## failure_mode_codes:  ["SUBOPTIMAL_QUALITY"]                                                        
+### pass_fail:  fail
+### failure_mode_codes:  ["SUBOPTIMAL_QUALITY"]                                                        
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------
 
