@@ -1,5 +1,13 @@
-### query_id:  REPL010
-### user_input:  Create a full lesson plan for 4.NF.2 with associated worksheet and exit slip. 
+# Example Queries
+
+|   Key               |                        Value                      |
+|---------------------|--------------------------------------------------------|
+|query_id             |REPL010|
+|user_input           |Create a full lesson plan for 4.NF.2 with associated worksheet and exit slip.|
+|annotation_text      |The Exit Slip if it is a true Exit Slip needs to be accounted for in the lesson plan duration.
+The worksheet seems incomplete, e.g., choose two problems from the but only two are provided.|
+|pass_fail            |fail|
+|failure_mode_codes   |["SUBOPTIMAL_QUALITY"]|
 
 ### llm_response:
 #### Lesson Plan: Understanding and Comparing Fractions (4.NF.2)**
@@ -73,12 +81,7 @@
 - This lesson involves visual aids and hands-on activities which require supervision. Ensure that students are appropriately supported during group work and individual practice.
 - Check with district policy in case technology is used in future extensions (e.g., online fraction games).
 - Ensure accessibility for all students who may need special accommodations. 
-
-### annotation_text
-The Exit Slip if it is a true Exit Slip needs to be accounted for in the lesson plan duration.
-The worksheet seems incomplete, e.g., choose two problems from the but only two are provided. 
-### pass_fail:  fail
-### failure_mode_codes:  ["SUBOPTIMAL_QUALITY"]                                                        
+                                                 
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------
 
