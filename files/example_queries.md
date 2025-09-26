@@ -107,7 +107,7 @@
 #### Assessment:
 - Observe student participation in discussions.
 - Review art projects to ensure understanding of the themes discussed.
-### Special Considerations:
+#### Special Considerations:
 - Be mindful of diverse family traditions surrounding Thanksgiving and encourage respect and inclusion.
 - Check for any allergen concerns if snacks are involved or if students will be using any materials that could cause sensitivity.
 - Ensure discussions remain age-appropriate and respectful, and consider the varying cultural backgrounds of students. 
@@ -126,103 +126,95 @@
 #### Grade Level: 3-5 
 #### Duration: 30 minutes
 
-
 #### Objectives:
 - Students will be able to differentiate between healthy and unhealthy snacks.
 - Students will learn to read nutritional labels and understand basic nutritional information.
-
-
 #### Materials Needed:
 - Pictures or samples of various snacks (e.g., fruits, vegetables, chips, candy, nuts)
 - Visual aids (posters or digital slides) showing healthy and unhealthy snacks
 - Nutritional labels from common snack foods (preferably with no recognizable brand names)
 - Whiteboard and markers
 - "Healthy or Unhealthy?" worksheet for students
-
 #### Lesson Outline:
-
 #### Introduction (5 minutes)
 1. **Warm-Up Discussion**: 
    - Ask students what their favorite snacks are and write their responses on the board.
    - Discuss as a class why they like these snacks.
-
 #### Activity 1: Snack Identification (10 minutes)
 2. **Snack Sorting**: 
    - Divide students into small groups and provide each group with a mix of snack pictures/samples.
    - Ask them to sort the snacks into two categories: Healthy and Unhealthy.
    - After 5 minutes, bring the class back together and have each group share their findings.
-
 #### Activity 2: Nutritional Label Exploration (10 minutes)
 3. **Reading Labels**: 
    - Hand out samples of nutritional labels without brand names.
    - Explain key components: serving size, calories, fat, sugars, and nutrition percentages.
    - Students will work in pairs to analyze the nutritional labels and determine whether the snacks are healthy or unhealthy based on their content.
-
 #### Conclusion (5 minutes)
 4. **Reflection and Discussion**: 
    - Discuss what types of snacks they saw most frequently in the unhealthy category and why they might be marketed that way.
    - Conclude with a few healthy snack ideas they can choose in the future. 
-
-### Assessment:
+#### Assessment:
 - Use the "Healthy or Unhealthy?" worksheet for students to assess their understanding. They can either sort additional snacks or write down healthy options based on what they learned.
-
----
-
-### Special Considerations:
+#### Special Considerations:
 - Ensure to check for any allergies when using snacks or providing samples, and provide alternatives as needed.
 - If using digital tools or displaying images, ensure all resources comply with copyright laws and are properly sourced.
 - Encourage students to share their findings with caregivers to promote healthy snack choices at home.
+#### Note for Educators:
+- Be sensitive to varying cultural norms related to food and snacks. Include a diverse range of healthy snack options from various cultural backgrounds to foster inclusion.                                                                                                                                                    
 
-### Note for Educators:
-- Be sensitive to varying cultural norms related to food and snacks. Include a diverse range of healthy snack options from various cultural backgrounds to foster inclusion.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| REPL016  | I am teaching a health lesson on TEKS 3F, can you create me a lesson plan.    | Sure! Below is a sample lesson plan tailored to TEKS 3F, which focuses on students demonstrating the ability to practice healthy behaviors.
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+|   Key               |                        Value                           |
+|---------------------|--------------------------------------------------------|
+|query_id             |REPL016                                               |
+|user_input           |I am teaching a health lesson on TEKS 3F, can you create me a lesson plan.          |
+|annotation_text      |TEKS 3F is Mental health and wellness--social and emotional health. The student identifies and applies strategies to develop socio-emotional health, self-regulation, and healthy relationships SPECIFICALLY, describe the value of respectful communication.  The TEKS standards described here does not match 3F.                                   |
+|pass_fail            |false                                                    |
+|failure_mode_codes   |["STANDARDS_ALIGNMENT","COMPLETENESS_ISSUES","SPECIAL_CONSIDERATIONS_MISUSE"]       |
 
-### Lesson Plan: Understanding and Practicing Healthy Behaviors
-
+### llm_response:
+- Sure! Below is a sample lesson plan tailored to TEKS 3F, which focuses on students demonstrating the ability to practice healthy behaviors.
+#### Lesson Plan: Understanding and Practicing Healthy Behaviors
 **Grade Level:** 3rd Grade  
 **Subject:** Health  
 **Duration:** 1 hour
-
 #### Objectives:
 - Students will identify healthy behaviors and discuss their importance.
 - Students will create a personal action plan to incorporate healthy behaviors into their daily routine.
-
 #### Materials Needed:
 - Chart paper or whiteboard
 - Markers
 - Access to online resources or health education books
 - Healthy behavior action plan templates (printed or digital)
-
-### Procedure:
-
+#### Procedure:
 **1. Introduction (10 minutes)**
    - Begin with a class discussion. Ask students what they think healthy behaviors are. Write their responses on the chart paper or whiteboard.
    - Introduce TEKS 3F and explain its focus on practicing healthy behaviors.
-
 **2. Group Activity (20 minutes)**
    - Divide the class into small groups. Each group will discuss specific healthy behaviors (e.g., exercise, eating fruits and vegetables, hygiene practices).
    - Each group creates a poster highlighting one healthy behavior, including why it's important and how to implement it.
-
 **3. Presentation (10 minutes)**
    - Groups will present their posters to the class. Encourage classmates to ask questions and share additional ideas related to healthy behaviors.
-
 **4. Personal Action Plan (15 minutes)**
    - Provide students with action plan templates.
    - Instruct them to write down three healthy behaviors they currently practice and three they would like to incorporate into their lives. Encourage them to think about their daily routine and how to make healthy choices.
-
 **5. Closure (5 minutes)**
    - Have a brief reflection session. Ask students to share what they learned and how they plan to incorporate their new healthy behaviors.
-
-### Assessment:
+#### Assessment:
 - Assess group posters for creativity, clarity, and content regarding healthy behaviors.
 - Review individual action plans to ensure an understanding of healthy behaviors.
-
-### Special Considerations:
+#### Special Considerations:
 - Ensure all discussions and activities are inclusive and respectful of diverse backgrounds.
 - If using digital tools or resources, make sure students have permission for internet use and check district policy requirements.
 - If any financial contributions are required for materials, ensure equitable access for all students. 
 
-This lesson plan provides a comprehensive approach to teaching students about healthy behaviors while allowing for creativity and peer collaboration.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | TEKS 3F is Mental health and wellness--social and emotional health. The student identifies and applies strategies to develop socio-emotional health, self-regulation, and healthy relationships SPECIFICALLY, describe the value of respectful communication.  The TEKS standards described here does not match 3F. | false     | ["STANDARDS_ALIGNMENT","COMPLETENESS_ISSUES","SPECIAL_CONSIDERATIONS_MISUSE"] |
+- This lesson plan provides a comprehensive approach to teaching students about healthy behaviors while allowing for creativity and peer collaboration.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+
+
+
+
+
+
 | REPL031  | Design a simplified version of the lesson for students who are ELL.           | Certainly! When designing a lesson for English Language Learners (ELL), it's essential to simplify the language, use visuals, and incorporate interactive activities. Here’s a structure for a simplified lesson plan focused on a basic topic, like "Weather."
 
 ### Lesson Title: Understanding Weather
