@@ -37,27 +37,44 @@ To complete the analysis phase, I engaged in the following:
 **Note:** The failure modes and rubrics are not necessarily final, as it is an iterative process of improvement, especially as the entire process is applied with production data.
  
 ## Measure 
-The goal of the measure phase is to determine what should be measured and implement metrics for those measurements.  Essentially, it is turning the unstructured insights from the analysis phase into qualitative data.  The identified metrics will guide me in determining the necessary improvements to enhance the accuracy and reliability of the chatbot, ensuring that teachers find it trustworthy and valuable.
+The goal of the measure phase is to determine what should be measured and implement metrics for those measurements.  Essentially, it is turning the unstructured insights from the analysis phase into quantitative data.  The identified metrics will guide me in determining the necessary improvements to enhance the accuracy and reliability of the chatbot, ensuring that teachers find it trustworthy and valuable.
 
 To achieve this phase, I completed the following:
-- The first thing I needed was an additional tool that would allow me to visualize the different metrics I wanted to capture.  This would allow me to visualize my data in a more efficient and fun way!  The overwhelming suggestion was to use Python libraries so I went down that route.  
+- The first thing I needed was an additional tool that would allow me to visualize the different metrics I captured.  The overwhelming suggestion was to use Python libraries so I went down that route.  
 - The most obvious measurement I wanted to capture was the failure mode error rate.  That is, what percentage of the time does "x" failure mode occur among all the LLM responses?  Knowing this information would allow me to prioritize improvements in the next phase.
--  The [`pages/failure_mode_analysis_display`](https://lfuentes1.github.io/education-ai/pages/failure_mode_analysis_display.html) file shows several pieces of insight:
-	- By answering the question, "What is the error rate of each failure mode?", I immediately saw that *Standards Alignment* and *Hallucinated Scope* had the highest error rates.  This measurement aligned with my observations as I manually annotated the LLM responses during the analysis phase.  
-	- It was also helpful to see a table with all the queries listed and the specific failure modes in which the LLM response either passed (failure mode was absent) or failed (failure mode was present).  This helped me trace back to a specific query, the failure mode if something required a double look.
+-  The [`pages`](https://github.com/lfuentes1/education-ai/tree/main/pages) folder shows several pieces of insight:
+	- [`**Failure Mode Analysis**`](https://lfuentes1.github.io/education-ai/pages/failure_mode_analysis_display.html):  By answering the question, "What is the error rate of each failure mode (segmented by task)?", I immediately saw that *Special Considerations Misuse* and *Hallucinated Scope* had the highest error rates for lesson plans at 45% and 40%.  Futhermore, I knew from manual annotations that even though *Standards Alignment* was only coming back with a 25% failure rate, when the teacher query called out a specific TEKS academic standard code the failure rate was much higher than 25%.  The LLM almost always failed to identify the proper learning objective tied to the TEKS academic code and it was important to keep that in mind.
+	- [`**Failure Mode Analysis**`](https://lfuentes1.github.io/education-ai/pages/failure_mode_analysis_display.html):  It was also helpful to see a table with all the queries listed and the specific failure modes in which the LLM response either passed (failure mode was absent) or failed (failure mode was present).  This helped me trace back to a specific query, the failure mode if something required a double look.
+	- [`DISTRIBUTION`](https://github.com/lfuentes1/education-ai/tree/main/pages):  Finally, although not immediately useful for my project given that I am focused on simple lesson plans for this first iteration, visualizing different teacher queries distributions will help further analysis (e.g., query complexity, query length) in the future.
 
-- Manual annotations and grading (although necessary at first) do not scale due to the time and effort it takes to get a sufficient amount of LLM responses reviewed.  Part of the measure phase also involves implementing automated evaluators for LLM responses, known as **AI Evals.**  There are many kinds of AI Evals, each with its ideal use case.  Describing the different types is better suited for a blog post; instead, I will call out the high-level plan as it relates to some of the education chatbot's failure modes.
+- Manual annotations and grading (although necessary at first) do not scale due to the time and effort it takes to get a sufficient amount of LLM responses reviewed and graded.  Part of the measure phase also involves implementing evaluators for LLM responses, known as **AI Evals,** to automate measurement.  There are many kinds of AI Evals, each with its ideal use case.  Describing the different types is better suited for a blog post; instead, I will call out the high-level plan as it relates to some of the education chatbot's failure modes.
 	- **Failure Mode:  Standard Alignment Errors**
-		- *Reference-based, code-based* evaluator to look up the learning objective and provide the context to the LLM.  Upon the LLM response, compare the objective returned to the ground truth.  Finally, use a *reference-free, code-based* evaluator to verify that the lesson plan contents align with the learning objective.  Grade the entire trace as pass or fail.
+		- *Reference-based, code-based* evaluator to measure the rate at which the standards aligns with ground truth.  
+		
+		
+		  Upon the LLM response, compare the objective returned to the ground truth.  Finally, use a *reference-free, code-based* evaluator to verify that the lesson plan contents align with the learning objective.  Grade the entire trace as pass or fail.
 	- **Failure Mode:  Completeness**
 		- *Reference-free, code-based* evaluator to check that the LLM output has all the required elements based on the teacher query.  Grade the entire trace as pass or fail.
- 	- **Failure Mode:  Special Considerations Misuse**
-	 	- *Reference-free, LLM-as-Judge* evaluator to verify if the generated special considerations were irrelevant, misapplied, or missing when required.
-	
-- For me, it was clear that I needed to implement enhancements to reduce the error rate of my most prevalent failure modes, and that is where I started, as described in the next phase, **Improve**.
+	- **Failure Mode:  Special Considerations Misuse**
+		- *Reference-free, LLM-as-Judge* evaluator to measure if the generated special considerations were irrelevant, misapplied, or missing when required.
+
+
+
+
+
+
+
+
+- For me, it was clear that I needed to implement enhancements to reduce the error rate of my most prevalent failure modes for lesson plans, and that is where I started, as described in the next phase, **Improve**.
 
 ## Improve
 The improvement phase is about making the product more reliable, accurate, and useful, in this case, the education chatbot for the teacher.
+
+
+
+- *Reference-based, code-based* evaluator to look up the learning objective and provide the context to the LLM.  Upon the LLM response, compare the objective returned to the ground truth.  Finally, use a *reference-free, code-based* evaluator to verify that the lesson plan contents align with the learning objective.  Grade the entire trace as pass or fail.
+
+
 
 **Priority #1: *Standard Alignment Errors***
 This failure mode occurs because the LLM does not know about the academic not know about the academic standard codes and their corresponding learning objectives.  The academic standard codes and learning objectives are a ground truth.  This information is published for nationwide or state use.  Suppose I feed this context to the LLM on each teacher query that references academic standard codes and compare the LLM response learning objective and lesson plan to ground truth. Do standard alignment errors go away? 
