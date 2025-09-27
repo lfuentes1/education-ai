@@ -7515,365 +7515,17 @@ a.anchor-link {
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="What-is-the-error-rate-of-each-failure-mode?-AND-What-is-the-error-rate-of-each-failure-mode-(segmented-by-task)?">What is the error rate of each failure mode? AND What is the error rate of each failure mode (segmented by task)?<a class="anchor-link" href="#What-is-the-error-rate-of-each-failure-mode?-AND-What-is-the-error-rate-of-each-failure-mode-(segmented-by-task)?">¶</a></h2><p>This analysis examines failure modes across different task types to identify patterns and areas for improvement.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=vdml8ezvo9k">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [6]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">HTML</span><span class="p">,</span> <span class="n">display</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">supabase</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_client</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.colors</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mcolors</span>
-
-<span class="c1"># Load environment variables</span>
-<span class="n">load_dotenv</span><span class="p">()</span>
-
-<span class="c1"># Configuration - Load from environment variables</span>
-<span class="n">SUPABASE_ANON_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">'NEXT_PUBLIC_SUPABASE_ANON_KEY'</span><span class="p">)</span>
-<span class="n">SUPABASE_FUNCTIONS_URL</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">'SUPABASE_FUNCTIONS_URL'</span><span class="p">)</span>
-<span class="n">SUPABASE_URL</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">'SUPABASE_URL'</span><span class="p">)</span>
-
-<span class="c1"># Construct function URL</span>
-<span class="n">FUNCTION_URL</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">SUPABASE_FUNCTIONS_URL</span><span class="si">}</span><span class="s2">/query_failure_modes"</span>
-
-<span class="c1"># Initialize Supabase client for direct queries</span>
-<span class="k">if</span> <span class="n">SUPABASE_URL</span> <span class="ow">and</span> <span class="n">SUPABASE_ANON_KEY</span><span class="p">:</span>
-    <span class="n">supabase</span> <span class="o">=</span> <span class="n">create_client</span><span class="p">(</span><span class="n">SUPABASE_URL</span><span class="p">,</span> <span class="n">SUPABASE_ANON_KEY</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="n">supabase</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"Warning: Supabase client not initialized - some features may be unavailable"</span><span class="p">)</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">fetch_failure_mode_data</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">"""Fetch query failure mode data from Supabase Edge Function"""</span>
-    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">'Authorization'</span><span class="p">:</span> <span class="sa">f</span><span class="s1">'Bearer </span><span class="si">{</span><span class="n">SUPABASE_ANON_KEY</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
-        <span class="s1">'Content-Type'</span><span class="p">:</span> <span class="s1">'application/json'</span>
-    <span class="p">}</span>
-    
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">FUNCTION_URL</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
-        <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
-    <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">RequestException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error fetching data: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-        <span class="k">return</span> <span class="kc">None</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">fetch_task_classification_data</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">"""Fetch task classification data for REPL queries"""</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">supabase</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">"Supabase client not available for task classification data"</span><span class="p">)</span>
-        <span class="k">return</span> <span class="kc">None</span>
-    
-    <span class="k">try</span><span class="p">:</span>
-        <span class="c1"># Query for REPL queries with task classification data</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="n">supabase</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="s2">"queries"</span><span class="p">)</span><span class="o">.</span><span class="n">select</span><span class="p">(</span>
-            <span class="s2">"query_id, task_types, user_input"</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">like</span><span class="p">(</span><span class="s2">"query_id"</span><span class="p">,</span> <span class="s2">"REPL%"</span><span class="p">)</span><span class="o">.</span><span class="n">not_</span><span class="o">.</span><span class="n">is_</span><span class="p">(</span><span class="s2">"task_types"</span><span class="p">,</span> <span class="s2">"null"</span><span class="p">)</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
-        
-        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">"No task classification data found for REPL queries"</span><span class="p">)</span>
-            <span class="k">return</span> <span class="p">[]</span>
-    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error fetching task classification data: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-        <span class="k">return</span> <span class="kc">None</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">get_fixed_threshold_color</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Generate color using fixed percentage thresholds"""</span>
-    <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="ow">or</span> <span class="n">value</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s1">'#ffffff'</span>  <span class="c1"># White for 0% or NaN</span>
-    <span class="k">elif</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="mi">20</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s1">'#fee5d9'</span>  <span class="c1"># Lightest red: 0-20%</span>
-    <span class="k">elif</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="mi">40</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s1">'#fcbba1'</span>  <span class="c1"># Light red: 20.1-40%</span>
-    <span class="k">elif</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="mi">60</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s1">'#fc9272'</span>  <span class="c1"># Medium red: 40.1-60%</span>
-    <span class="k">elif</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="mi">80</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s1">'#de2d26'</span>  <span class="c1"># Dark red: 60.1-80%</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s1">'#a50f15'</span>  <span class="c1"># Darkest red: 80.1-100%</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">calculate_and_display_error_rates</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">"""Calculate and display error rates for each failure mode (REPL queries only)"""</span>
-    <span class="c1"># Fetch data from Supabase Edge Function</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">fetch_failure_mode_data</span><span class="p">()</span>
-    
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">result</span> <span class="ow">or</span> <span class="s1">'data'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">"No data received from the function"</span><span class="p">)</span>
-        <span class="k">return</span>
-    
-    <span class="n">data</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s1">'data'</span><span class="p">]</span>
-    <span class="n">failure_modes</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'failure_modes'</span><span class="p">,</span> <span class="p">[])</span>
-    
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">"No query data found"</span><span class="p">)</span>
-        <span class="k">return</span>
-    
-    <span class="c1"># Convert to DataFrame</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-    
-    <span class="c1"># Filter for REPL queries only</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">'query_id'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'REPL'</span><span class="p">)]</span>
-    
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">"No REPL queries found"</span><span class="p">)</span>
-        <span class="k">return</span>
-    
-    <span class="c1"># Fetch task classification data</span>
-    <span class="n">task_data</span> <span class="o">=</span> <span class="n">fetch_task_classification_data</span><span class="p">()</span>
-    <span class="n">task_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">task_data</span><span class="p">)</span> <span class="k">if</span> <span class="n">task_data</span> <span class="k">else</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
-    
-    <span class="c1"># Merge with task classification data if available</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">task_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">task_df</span><span class="p">[[</span><span class="s1">'query_id'</span><span class="p">,</span> <span class="s1">'task_types'</span><span class="p">]],</span> <span class="n">on</span><span class="o">=</span><span class="s1">'query_id'</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">'left'</span><span class="p">)</span>
-        <span class="n">has_task_data</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">df</span><span class="p">[</span><span class="s1">'task_types'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">has_task_data</span> <span class="o">=</span> <span class="kc">False</span>
-    
-    <span class="c1"># Calculate overall error rates</span>
-    <span class="n">error_rates</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="n">total_queries</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-    
-    <span class="k">for</span> <span class="n">mode</span> <span class="ow">in</span> <span class="n">failure_modes</span><span class="p">:</span>
-        <span class="n">column_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'failure_mode_</span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s1">'</span>
-        <span class="k">if</span> <span class="n">column_name</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-            <span class="n">failure_count</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">column_name</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-            <span class="n">error_rate</span> <span class="o">=</span> <span class="p">(</span><span class="n">failure_count</span> <span class="o">/</span> <span class="n">total_queries</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
-            <span class="n">error_rates</span><span class="p">[</span><span class="n">mode</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s1">'failure_count'</span><span class="p">:</span> <span class="n">failure_count</span><span class="p">,</span>
-                <span class="s1">'total_queries'</span><span class="p">:</span> <span class="n">total_queries</span><span class="p">,</span>
-                <span class="s1">'error_rate_percent'</span><span class="p">:</span> <span class="n">error_rate</span>
-            <span class="p">}</span>
-    
-    <span class="c1"># Display overall summary</span>
-    <span class="n">overall_summary_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span>
-        <span class="p">{</span>
-            <span class="s1">'Failure Mode'</span><span class="p">:</span> <span class="n">mode</span><span class="p">,</span>
-            <span class="s1">'Failures'</span><span class="p">:</span> <span class="n">stats</span><span class="p">[</span><span class="s1">'failure_count'</span><span class="p">],</span>
-            <span class="s1">'Total Queries'</span><span class="p">:</span> <span class="n">stats</span><span class="p">[</span><span class="s1">'total_queries'</span><span class="p">],</span>
-            <span class="s1">'Error Rate (%)'</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s1">'error_rate_percent'</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="p">}</span>
-        <span class="k">for</span> <span class="n">mode</span><span class="p">,</span> <span class="n">stats</span> <span class="ow">in</span> <span class="n">error_rates</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-    <span class="p">])</span>
-    <span class="n">overall_summary_df</span> <span class="o">=</span> <span class="n">overall_summary_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">'Error Rate (%)'</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    
-    <span class="c1"># DEBUG: Show Overall table color thresholds (fixed percentage ranges)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"🎨 OVERALL TABLE COLOR RANGES (fixed percentage thresholds):"</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"   White: 0% (zero values only)"</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"   Lightest red: 0.1% - 20.0%"</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"   Light red: 20.1% - 40.0%"</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"   Medium red: 40.1% - 60.0%"</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"   Dark red: 60.1% - 80.0%"</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"   Darkest red: 80.1% - 100.0%"</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">()</span>
-    
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"OVERALL FAILURE MODE ERROR RATES (REPL QUERIES ONLY)"</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"="</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
-    
-    <span class="c1"># Create styled table using fixed thresholds instead of background_gradient</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">apply_fixed_color_styling</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">"""Apply fixed threshold coloring to error rate values"""</span>
-        <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
-            <span class="k">return</span> <span class="s1">''</span>
-        <span class="n">color</span> <span class="o">=</span> <span class="n">get_fixed_threshold_color</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s1">'background-color: </span><span class="si">{</span><span class="n">color</span><span class="si">}</span><span class="s1">'</span>
-    
-    <span class="n">styled_overall</span> <span class="o">=</span> <span class="n">overall_summary_df</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">format</span><span class="p">({</span>
-        <span class="s1">'Error Rate (%)'</span><span class="p">:</span> <span class="s1">'</span><span class="si">{:.1f}</span><span class="s1">%'</span>
-    <span class="p">})</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">apply_fixed_color_styling</span><span class="p">,</span> <span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">'Error Rate (%)'</span><span class="p">])</span>
-    
-    <span class="n">display</span><span class="p">(</span><span class="n">styled_overall</span><span class="p">)</span>
-    
-    <span class="c1"># Initialize task_summary_df to None</span>
-    <span class="n">task_summary_df</span> <span class="o">=</span> <span class="kc">None</span>
-    
-    <span class="c1"># If we have task classification data, show segmented analysis</span>
-    <span class="k">if</span> <span class="n">has_task_data</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span> <span class="s2">"="</span><span class="o">*</span><span class="mi">80</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">"FAILURE RATES BY TASK TYPE"</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">"="</span><span class="o">*</span><span class="mi">80</span><span class="p">)</span>
-        
-        <span class="c1"># Process task types (they're stored as JSONB arrays)</span>
-        <span class="n">df_expanded</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
-            <span class="n">task_types</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">'task_types'</span><span class="p">]</span>
-            <span class="k">if</span> <span class="n">task_types</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">task_types</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-                <span class="k">for</span> <span class="n">task_type</span> <span class="ow">in</span> <span class="n">task_types</span><span class="p">:</span>
-                    <span class="n">row_copy</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-                    <span class="n">row_copy</span><span class="p">[</span><span class="s1">'primary_task_type'</span><span class="p">]</span> <span class="o">=</span> <span class="n">task_type</span>
-                    <span class="n">df_expanded</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row_copy</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">row_copy</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-                <span class="n">row_copy</span><span class="p">[</span><span class="s1">'primary_task_type'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'unclassified'</span>
-                <span class="n">df_expanded</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row_copy</span><span class="p">)</span>
-        
-        <span class="n">df_expanded</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df_expanded</span><span class="p">)</span>
-        
-        <span class="c1"># Calculate error rates by task type</span>
-        <span class="n">task_type_analysis</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">task_type</span> <span class="ow">in</span> <span class="n">df_expanded</span><span class="p">[</span><span class="s1">'primary_task_type'</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">task_type</span><span class="p">):</span>
-                <span class="n">task_type</span> <span class="o">=</span> <span class="s1">'unclassified'</span>
-            
-            <span class="n">task_subset</span> <span class="o">=</span> <span class="n">df_expanded</span><span class="p">[</span><span class="n">df_expanded</span><span class="p">[</span><span class="s1">'primary_task_type'</span><span class="p">]</span> <span class="o">==</span> <span class="n">task_type</span><span class="p">]</span>
-            <span class="n">task_total</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">task_subset</span><span class="p">)</span>
-            
-            <span class="n">task_errors</span> <span class="o">=</span> <span class="p">{}</span>
-            <span class="k">for</span> <span class="n">mode</span> <span class="ow">in</span> <span class="n">failure_modes</span><span class="p">:</span>
-                <span class="n">column_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'failure_mode_</span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s1">'</span>
-                <span class="k">if</span> <span class="n">column_name</span> <span class="ow">in</span> <span class="n">task_subset</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-                    <span class="n">failures</span> <span class="o">=</span> <span class="n">task_subset</span><span class="p">[</span><span class="n">column_name</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-                    <span class="n">rate</span> <span class="o">=</span> <span class="p">(</span><span class="n">failures</span> <span class="o">/</span> <span class="n">task_total</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span> <span class="k">if</span> <span class="n">task_total</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
-                    <span class="n">task_errors</span><span class="p">[</span><span class="n">mode</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-                        <span class="s1">'failures'</span><span class="p">:</span> <span class="n">failures</span><span class="p">,</span>
-                        <span class="s1">'total'</span><span class="p">:</span> <span class="n">task_total</span><span class="p">,</span>
-                        <span class="s1">'rate'</span><span class="p">:</span> <span class="n">rate</span>
-                    <span class="p">}</span>
-            
-            <span class="n">task_type_analysis</span><span class="p">[</span><span class="n">task_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">task_errors</span>
-        
-        <span class="c1"># Create task type summary table with shorter column names</span>
-        <span class="n">task_summary_data</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">task_type</span><span class="p">,</span> <span class="n">modes</span> <span class="ow">in</span> <span class="n">task_type_analysis</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">row</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'Task Type'</span><span class="p">:</span> <span class="n">task_type</span><span class="p">,</span> <span class="s1">'Total'</span><span class="p">:</span> <span class="n">modes</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">modes</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]][</span><span class="s1">'total'</span><span class="p">]}</span>
-            <span class="k">for</span> <span class="n">mode</span> <span class="ow">in</span> <span class="n">failure_modes</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">mode</span> <span class="ow">in</span> <span class="n">modes</span><span class="p">:</span>
-                    <span class="c1"># Use abbreviated column names for better fit</span>
-                    <span class="n">short_name</span> <span class="o">=</span> <span class="n">mode</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'_'</span><span class="p">,</span> <span class="s1">' '</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'ISSUES'</span><span class="p">,</span> <span class="s1">'ISS'</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'ALIGNMENT'</span><span class="p">,</span> <span class="s1">'ALIGN'</span><span class="p">)</span>
-                    <span class="n">column_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">short_name</span><span class="si">}</span><span class="s1"> (%)'</span>
-                    <span class="n">row</span><span class="p">[</span><span class="n">column_name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">modes</span><span class="p">[</span><span class="n">mode</span><span class="p">][</span><span class="s1">'rate'</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="n">task_summary_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
-        
-        <span class="n">task_summary_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">task_summary_data</span><span class="p">)</span>
-        <span class="n">task_summary_df</span> <span class="o">=</span> <span class="n">task_summary_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">'Total'</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        
-        <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Error Rates by Task Type:"</span><span class="p">)</span>
-        <span class="n">failure_mode_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">task_summary_df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">col</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">'(%)'</span><span class="p">)]</span>
-        
-        <span class="c1"># DEBUG: Show Task Type table color thresholds (fixed percentage ranges)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"🎨 TASK TYPE TABLE COLOR RANGES (fixed percentage thresholds):"</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"   White: 0% (zero values only)"</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"   Lightest red: 0.1% - 20.0%"</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"   Light red: 20.1% - 40.0%"</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"   Medium red: 40.1% - 60.0%"</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"   Dark red: 60.1% - 80.0%"</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"   Darkest red: 80.1% - 100.0%"</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">()</span>
-        
-        <span class="c1"># Build HTML table with fixed threshold colors</span>
-        <span class="n">html_rows</span> <span class="o">=</span> <span class="p">[]</span>
-        
-        <span class="c1"># Header row</span>
-        <span class="n">header_cells</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">task_summary_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-            <span class="n">header_cells</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">'&lt;th&gt;</span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s1">&lt;/th&gt;'</span><span class="p">)</span>
-        <span class="n">html_rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">'&lt;tr&gt;</span><span class="si">{</span><span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">header_cells</span><span class="p">)</span><span class="si">}</span><span class="s1">&lt;/tr&gt;'</span><span class="p">)</span>
-        
-        <span class="c1"># Data rows</span>
-        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">task_summary_df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
-            <span class="n">row_cells</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">task_summary_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-                <span class="n">value</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
-                <span class="k">if</span> <span class="n">col</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">'(%)'</span><span class="p">)</span> <span class="ow">and</span> <span class="n">pd</span><span class="o">.</span><span class="n">notna</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="ow">and</span> <span class="n">value</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="c1"># Apply fixed threshold color</span>
-                    <span class="n">bg_color</span> <span class="o">=</span> <span class="n">get_fixed_threshold_color</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-                    <span class="n">row_cells</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">'&lt;td style="background-color: </span><span class="si">{</span><span class="n">bg_color</span><span class="si">}</span><span class="s1">;"&gt;</span><span class="si">{</span><span class="n">value</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">%&lt;/td&gt;'</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">row_cells</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">'&lt;td&gt;</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">&lt;/td&gt;'</span><span class="p">)</span>
-            <span class="n">html_rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">'&lt;tr&gt;</span><span class="si">{</span><span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">row_cells</span><span class="p">)</span><span class="si">}</span><span class="s1">&lt;/tr&gt;'</span><span class="p">)</span>
-        
-        <span class="c1"># Create complete HTML table</span>
-        <span class="n">html_table</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'''</span>
-<span class="s1">        &lt;table id="task_type_table"&gt;</span>
-<span class="s1">            </span><span class="si">{</span><span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">html_rows</span><span class="p">)</span><span class="si">}</span>
-<span class="s1">        &lt;/table&gt;</span>
-<span class="s1">        '''</span>
-        
-        <span class="c1"># Add custom CSS styling with much smaller first column</span>
-        <span class="n">custom_css</span> <span class="o">=</span> <span class="s2">"""</span>
-<span class="s2">        &lt;style&gt;</span>
-<span class="s2">        #task_type_table {</span>
-<span class="s2">            width: 100%;</span>
-<span class="s2">            table-layout: fixed;</span>
-<span class="s2">            border-collapse: collapse;</span>
-<span class="s2">            overflow: visible;</span>
-<span class="s2">        }</span>
-<span class="s2">        #task_type_table th, #task_type_table td {</span>
-<span class="s2">            border: 1px solid #ddd;</span>
-<span class="s2">            padding: 6px;</span>
-<span class="s2">            text-align: center;</span>
-<span class="s2">            white-space: nowrap;</span>
-<span class="s2">        }</span>
-<span class="s2">        #task_type_table th:first-child, #task_type_table td:first-child {</span>
-<span class="s2">            width: 15%;</span>
-<span class="s2">            max-width: 100px;</span>
-<span class="s2">            text-align: left;</span>
-<span class="s2">            font-size: 12px;</span>
-<span class="s2">        }</span>
-<span class="s2">        #task_type_table th:nth-child(2), #task_type_table td:nth-child(2) {</span>
-<span class="s2">            width: 6%;</span>
-<span class="s2">            max-width: 40px;</span>
-<span class="s2">            font-size: 12px;</span>
-<span class="s2">        }</span>
-<span class="s2">        #task_type_table th {</span>
-<span class="s2">            background-color: #f2f2f2;</span>
-<span class="s2">            font-weight: bold;</span>
-<span class="s2">            white-space: normal;</span>
-<span class="s2">            word-wrap: break-word;</span>
-<span class="s2">            font-size: 11px;</span>
-<span class="s2">        }</span>
-<span class="s2">        #task_type_table tr:nth-child(even) {</span>
-<span class="s2">            background-color: #fafafa;</span>
-<span class="s2">        }</span>
-<span class="s2">        &lt;/style&gt;</span>
-<span class="s2">        """</span>
-        
-        <span class="n">display</span><span class="p">(</span><span class="n">HTML</span><span class="p">(</span><span class="n">custom_css</span> <span class="o">+</span> <span class="n">html_table</span><span class="p">))</span>
-    
-    <span class="c1"># Print key insights</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">KEY INSIGHTS:"</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"- Total REPL queries analyzed: </span><span class="si">{</span><span class="n">total_queries</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">overall_summary_df</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"- Highest error rate: </span><span class="si">{</span><span class="n">overall_summary_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">'Failure Mode'</span><span class="p">]</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">overall_summary_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">'Error Rate (%)'</span><span class="p">]</span><span class="si">}</span><span class="s2">%)"</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"- Lowest error rate: </span><span class="si">{</span><span class="n">overall_summary_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">'Failure Mode'</span><span class="p">]</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">overall_summary_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">'Error Rate (%)'</span><span class="p">]</span><span class="si">}</span><span class="s2">%)"</span><span class="p">)</span>
-    
-    <span class="k">if</span> <span class="n">has_task_data</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"- Task types found: </span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">t</span><span class="p">)</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">df_expanded</span><span class="p">[</span><span class="s1">'primary_task_type'</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">pd</span><span class="o">.</span><span class="n">notna</span><span class="p">(</span><span class="n">t</span><span class="p">)])</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">"- Task classification data not available - run queries with task classification to enable segmented analysis"</span><span class="p">)</span>
-    
-    <span class="k">return</span> <span class="n">overall_summary_df</span><span class="p">,</span> <span class="n">task_summary_df</span>
-
-<span class="c1"># Execute the error rate analysis</span>
-<span class="n">error_rate_summary</span><span class="p">,</span> <span class="n">task_type_summary</span> <span class="o">=</span> <span class="n">calculate_and_display_error_rates</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noInput" id="cell-id=vdml8ezvo9k">
 <div class="jp-Cell-outputWrapper">
 <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>🎨 OVERALL TABLE COLOR RANGES (fixed percentage thresholds):
    White: 0% (zero values only)
@@ -7889,7 +7541,6 @@ OVERALL FAILURE MODE ERROR RATES (REPL QUERIES ONLY)
 </div>
 </div>
 <div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
 <style type="text/css">
 #T_bd9e3_row0_col3, #T_bd9e3_row1_col3, #T_bd9e3_row2_col3 {
@@ -7964,7 +7615,6 @@ OVERALL FAILURE MODE ERROR RATES (REPL QUERIES ONLY)
 </div>
 </div>
 <div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>
 ================================================================================
@@ -7984,7 +7634,6 @@ Error Rates by Task Type:
 </div>
 </div>
 <div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
 <style>
         #task_type_table {
@@ -8027,7 +7676,6 @@ Error Rates by Task Type:
 </div>
 </div>
 <div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>
 KEY INSIGHTS:
@@ -8045,175 +7693,17 @@ KEY INSIGHTS:
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="What-are-the-failure-modes-that-are-present-or-absent-for-each-teacher-query?">What are the failure modes that are present or absent for each teacher query?<a class="anchor-link" href="#What-are-the-failure-modes-that-are-present-or-absent-for-each-teacher-query?">¶</a></h2>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=0a0b24bd-6819-4599-9aa3-6c5a9ad4e1f8">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [8]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">HTML</span><span class="p">,</span> <span class="n">display</span>
-
-<span class="c1"># Load environment variables</span>
-<span class="n">load_dotenv</span><span class="p">()</span>
-
-<span class="c1"># Configuration - Load from environment variables</span>
-<span class="n">SUPABASE_ANON_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">'NEXT_PUBLIC_SUPABASE_ANON_KEY'</span><span class="p">)</span>
-<span class="n">SUPABASE_FUNCTIONS_URL</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">'SUPABASE_FUNCTIONS_URL'</span><span class="p">)</span>
-
-<span class="c1"># Construct function URL</span>
-<span class="n">FUNCTION_URL</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">SUPABASE_FUNCTIONS_URL</span><span class="si">}</span><span class="s2">/query_failure_modes"</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">fetch_failure_mode_data</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">"""Fetch query failure mode data from Supabase Edge Function"""</span>
-    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">'Authorization'</span><span class="p">:</span> <span class="sa">f</span><span class="s1">'Bearer </span><span class="si">{</span><span class="n">SUPABASE_ANON_KEY</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
-        <span class="s1">'Content-Type'</span><span class="p">:</span> <span class="s1">'application/json'</span>
-    <span class="p">}</span>
-    
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">FUNCTION_URL</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
-        <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
-    <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">RequestException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error fetching data: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-        <span class="k">return</span> <span class="kc">None</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">create_failure_mode_table</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">"""Create and display failure mode visualization table (REPL queries only)"""</span>
-    <span class="c1"># Fetch data from Supabase Edge Function</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">fetch_failure_mode_data</span><span class="p">()</span>
-    
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">result</span> <span class="ow">or</span> <span class="s1">'data'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">"No data received from the function"</span><span class="p">)</span>
-        <span class="k">return</span>
-    
-    <span class="n">data</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s1">'data'</span><span class="p">]</span>
-    <span class="n">failure_modes</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'failure_modes'</span><span class="p">,</span> <span class="p">[])</span>
-    
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">"No query data found"</span><span class="p">)</span>
-        <span class="k">return</span>
-    
-    <span class="c1"># Convert to DataFrame</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-    
-    <span class="c1"># Filter for REPL queries only</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">'query_id'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'REPL'</span><span class="p">)]</span>
-    
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">"No REPL queries found"</span><span class="p">)</span>
-        <span class="k">return</span>
-    
-    <span class="c1"># Sort by query_id - first alphabetically, then numerically by last 3 digits</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">sort_key</span><span class="p">(</span><span class="n">query_id</span><span class="p">):</span>
-        <span class="n">query_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">query_id</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">query_str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'REPL'</span><span class="p">):</span>
-            <span class="c1"># For REPL queries, sort by the full string</span>
-            <span class="k">return</span> <span class="p">(</span><span class="n">query_str</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">query_str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'SYNQ'</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">query_str</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">7</span><span class="p">:</span>
-            <span class="c1"># Extract first 4 chars and last 3 digits for sorting</span>
-            <span class="n">prefix</span> <span class="o">=</span> <span class="n">query_str</span><span class="p">[:</span><span class="mi">4</span><span class="p">]</span>
-            <span class="n">suffix</span> <span class="o">=</span> <span class="n">query_str</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="c1"># Return tuple: (alphabetical_part, numerical_part)</span>
-                <span class="k">return</span> <span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">suffix</span><span class="p">))</span>
-            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-                <span class="c1"># If last 3 chars aren't numbers, fall back to string sorting</span>
-                <span class="k">return</span> <span class="p">(</span><span class="n">query_str</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">query_str</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-    
-    <span class="n">df</span><span class="p">[</span><span class="s1">'sort_key'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'query_id'</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sort_key</span><span class="p">)</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">'sort_key'</span><span class="p">)</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">'sort_key'</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    
-    <span class="c1"># Ensure query_id is first column, then failure mode columns only</span>
-    <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'query_id'</span><span class="p">]</span>
-    
-    <span class="c1"># Add failure mode columns in sorted order</span>
-    <span class="n">failure_mode_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">col</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'failure_mode_'</span><span class="p">)]</span>
-    <span class="n">failure_mode_columns</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
-    <span class="n">columns</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">failure_mode_columns</span><span class="p">)</span>
-    
-    <span class="c1"># Reorder DataFrame columns (exclude pass_fail)</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">columns</span><span class="p">]</span>
-    
-    <span class="c1"># Create display names for failure mode columns and convert 0/1 to pass/fail</span>
-    <span class="n">display_df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    
-    <span class="c1"># Format query_id column - for REPL queries, show the full query_id</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">format_query_id</span><span class="p">(</span><span class="n">query_id</span><span class="p">):</span>
-        <span class="n">query_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">query_id</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">query_str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'REPL'</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">query_str</span>  <span class="c1"># Show full REPL query ID</span>
-        <span class="k">elif</span> <span class="n">query_str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'SYNQ'</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">query_str</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">7</span><span class="p">:</span>
-            <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">query_str</span><span class="p">[:</span><span class="mi">4</span><span class="p">]</span><span class="si">}{</span><span class="n">query_str</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]</span><span class="si">}</span><span class="s2">"</span>
-        <span class="k">return</span> <span class="n">query_str</span>
-    
-    <span class="n">display_df</span><span class="p">[</span><span class="s1">'query_id'</span><span class="p">]</span> <span class="o">=</span> <span class="n">display_df</span><span class="p">[</span><span class="s1">'query_id'</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">format_query_id</span><span class="p">)</span>
-    
-    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">failure_mode_columns</span><span class="p">:</span>
-        <span class="c1"># Extract failure mode name from column (remove 'failure_mode_' prefix)</span>
-        <span class="n">mode_name</span> <span class="o">=</span> <span class="n">col</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'failure_mode_'</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span>
-        <span class="c1"># Convert 0/1 to pass/fail</span>
-        <span class="n">display_df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">display_df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">({</span><span class="mi">0</span><span class="p">:</span> <span class="s1">'pass'</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s1">'fail'</span><span class="p">})</span>
-        <span class="n">display_df</span> <span class="o">=</span> <span class="n">display_df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="n">col</span><span class="p">:</span> <span class="n">mode_name</span><span class="p">})</span>
-    
-    <span class="c1"># Style the DataFrame for better visualization</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">color_failure_modes</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">"""Color code: pass = green, fail = red"""</span>
-        <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
-            <span class="k">return</span> <span class="s1">''</span>
-        <span class="k">if</span> <span class="n">val</span> <span class="o">==</span> <span class="s1">'pass'</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s1">'background-color: #d4edda; color: #155724; text-align: center'</span>  <span class="c1"># Green for pass</span>
-        <span class="k">elif</span> <span class="n">val</span> <span class="o">==</span> <span class="s1">'fail'</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s1">'background-color: #f8d7da; color: #721c24; text-align: center'</span>  <span class="c1"># Red for fail</span>
-        <span class="k">return</span> <span class="s1">''</span>
-    
-    <span class="c1"># Apply styling to failure mode columns only</span>
-    <span class="n">failure_mode_display_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'failure_mode_'</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">failure_mode_columns</span><span class="p">]</span>
-    
-    <span class="n">styled_df</span> <span class="o">=</span> <span class="n">display_df</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
-        <span class="n">color_failure_modes</span><span class="p">,</span> 
-        <span class="n">subset</span><span class="o">=</span><span class="n">failure_mode_display_columns</span>
-    <span class="p">)</span><span class="o">.</span><span class="n">set_table_attributes</span><span class="p">(</span><span class="s1">'class="table table-striped table-hover"'</span><span class="p">)</span>
-    
-    <span class="c1"># Display summary information</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Total REPL queries: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failure modes tracked: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">failure_modes</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failure modes: </span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">failure_modes</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Legend: pass = failure mode absent, fail = failure mode present"</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"="</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
-    
-    <span class="c1"># Display the styled table</span>
-    <span class="n">display</span><span class="p">(</span><span class="n">styled_df</span><span class="p">)</span>
-    
-    <span class="k">return</span> <span class="n">display_df</span>
-
-<span class="c1"># Execute the visualization</span>
-<span class="n">failure_mode_table</span> <span class="o">=</span> <span class="n">create_failure_mode_table</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noInput" id="cell-id=0a0b24bd-6819-4599-9aa3-6c5a9ad4e1f8">
 <div class="jp-Cell-outputWrapper">
 <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>Total REPL queries: 29
 Failure modes tracked: 7
@@ -8225,7 +7715,6 @@ Legend: pass = failure mode absent, fail = failure mode present
 </div>
 </div>
 <div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
 <style type="text/css">
 #T_282fd_row0_col1, #T_282fd_row0_col4, #T_282fd_row0_col5, #T_282fd_row0_col6, #T_282fd_row0_col7, #T_282fd_row1_col1, #T_282fd_row1_col2, #T_282fd_row1_col3, #T_282fd_row1_col4, #T_282fd_row1_col5, #T_282fd_row1_col6, #T_282fd_row1_col7, #T_282fd_row2_col1, #T_282fd_row2_col2, #T_282fd_row2_col3, #T_282fd_row2_col4, #T_282fd_row2_col5, #T_282fd_row2_col6, #T_282fd_row2_col7, #T_282fd_row3_col1, #T_282fd_row3_col2, #T_282fd_row3_col3, #T_282fd_row3_col4, #T_282fd_row3_col5, #T_282fd_row3_col6, #T_282fd_row3_col7, #T_282fd_row4_col1, #T_282fd_row4_col2, #T_282fd_row4_col3, #T_282fd_row4_col4, #T_282fd_row4_col5, #T_282fd_row4_col6, #T_282fd_row4_col7, #T_282fd_row5_col1, #T_282fd_row5_col2, #T_282fd_row5_col3, #T_282fd_row5_col5, #T_282fd_row5_col6, #T_282fd_row5_col7, #T_282fd_row6_col1, #T_282fd_row6_col2, #T_282fd_row6_col3, #T_282fd_row6_col4, #T_282fd_row6_col6, #T_282fd_row6_col7, #T_282fd_row7_col2, #T_282fd_row7_col3, #T_282fd_row7_col6, #T_282fd_row7_col7, #T_282fd_row8_col1, #T_282fd_row8_col2, #T_282fd_row8_col3, #T_282fd_row8_col4, #T_282fd_row8_col6, #T_282fd_row8_col7, #T_282fd_row9_col1, #T_282fd_row9_col2, #T_282fd_row9_col3, #T_282fd_row9_col4, #T_282fd_row9_col5, #T_282fd_row9_col7, #T_282fd_row10_col1, #T_282fd_row10_col2, #T_282fd_row10_col3, #T_282fd_row10_col4, #T_282fd_row10_col5, #T_282fd_row10_col6, #T_282fd_row10_col7, #T_282fd_row11_col1, #T_282fd_row11_col2, #T_282fd_row11_col3, #T_282fd_row11_col5, #T_282fd_row11_col6, #T_282fd_row11_col7, #T_282fd_row12_col2, #T_282fd_row12_col5, #T_282fd_row12_col6, #T_282fd_row12_col7, #T_282fd_row13_col1, #T_282fd_row13_col3, #T_282fd_row13_col4, #T_282fd_row13_col5, #T_282fd_row13_col6, #T_282fd_row13_col7, #T_282fd_row14_col1, #T_282fd_row14_col3, #T_282fd_row14_col4, #T_282fd_row14_col5, #T_282fd_row14_col6, #T_282fd_row14_col7, #T_282fd_row15_col1, #T_282fd_row15_col2, #T_282fd_row15_col3, #T_282fd_row15_col4, #T_282fd_row15_col5, #T_282fd_row15_col6, #T_282fd_row15_col7, #T_282fd_row16_col1, #T_282fd_row16_col2, #T_282fd_row16_col3, #T_282fd_row16_col5, #T_282fd_row16_col6, #T_282fd_row16_col7, #T_282fd_row17_col1, #T_282fd_row17_col2, #T_282fd_row17_col3, #T_282fd_row17_col4, #T_282fd_row17_col5, #T_282fd_row17_col6, #T_282fd_row17_col7, #T_282fd_row18_col1, #T_282fd_row18_col2, #T_282fd_row18_col3, #T_282fd_row18_col4, #T_282fd_row18_col5, #T_282fd_row18_col6, #T_282fd_row18_col7, #T_282fd_row19_col1, #T_282fd_row19_col2, #T_282fd_row19_col3, #T_282fd_row19_col4, #T_282fd_row19_col5, #T_282fd_row19_col6, #T_282fd_row19_col7, #T_282fd_row20_col1, #T_282fd_row20_col2, #T_282fd_row20_col5, #T_282fd_row20_col6, #T_282fd_row20_col7, #T_282fd_row21_col1, #T_282fd_row21_col2, #T_282fd_row21_col4, #T_282fd_row21_col5, #T_282fd_row21_col6, #T_282fd_row21_col7, #T_282fd_row22_col1, #T_282fd_row22_col4, #T_282fd_row22_col5, #T_282fd_row22_col6, #T_282fd_row22_col7, #T_282fd_row23_col1, #T_282fd_row23_col2, #T_282fd_row23_col3, #T_282fd_row23_col4, #T_282fd_row23_col5, #T_282fd_row23_col6, #T_282fd_row23_col7, #T_282fd_row24_col1, #T_282fd_row24_col3, #T_282fd_row24_col4, #T_282fd_row24_col5, #T_282fd_row24_col6, #T_282fd_row25_col1, #T_282fd_row25_col4, #T_282fd_row25_col5, #T_282fd_row25_col6, #T_282fd_row25_col7, #T_282fd_row26_col1, #T_282fd_row26_col4, #T_282fd_row26_col5, #T_282fd_row26_col6, #T_282fd_row26_col7, #T_282fd_row27_col1, #T_282fd_row27_col4, #T_282fd_row27_col5, #T_282fd_row27_col6, #T_282fd_row27_col7, #T_282fd_row28_col1, #T_282fd_row28_col2, #T_282fd_row28_col5, #T_282fd_row28_col6, #T_282fd_row28_col7 {
@@ -8579,20 +8068,7 @@ Legend: pass = failure mode absent, fail = failure mode present
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=108fd0c5-fe92-4aa2-b5c3-ada7e5be8d89">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span> 
-</pre></div>
-</div>
-</div>
-</div>
-</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs jp-mod-noInput" id="cell-id=108fd0c5-fe92-4aa2-b5c3-ada7e5be8d89">
 </div>
 </main>
 </body>
